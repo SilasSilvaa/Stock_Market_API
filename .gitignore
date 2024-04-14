@@ -1,0 +1,27 @@
+# Arquivos temporários
+bin/
+obj/
+
+# Arquivos de compilação
+*.exe
+*.dll
+*.pdb
+
+# Arquivos de dependências gerenciadas (NuGet)
+packages/
+
+# Arquivos de configuração específicos do usuário
+*.user
+*.suo
+*.vs
+
+# Arquivos de log
+*.log
+
+# Arquivos de chave ou segredo
+appsettings.json
+secrets.json
+
+# Arquivos de compilação do Visual Studio
+.vscode/
+.vs/

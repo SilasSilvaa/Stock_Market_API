@@ -25,3 +25,7 @@ secrets.json
 # Arquivos de compilação do Visual Studio
 .vscode/
 .vs/
+
+# /=Migrations
+/Migrations
+/Migrations/*

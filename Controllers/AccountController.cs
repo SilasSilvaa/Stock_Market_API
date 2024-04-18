@@ -20,13 +20,12 @@ namespace api.Controllers
         private readonly ITokenService _token = token;
         private readonly SignInManager<AppUser> _signInManager = signInManager;
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto register)
         {
             try{
 
-                if(!ModelState.IsValid)
-                    return BadRequest(ModelState);    
+                if(!ModelState.IsValid) return BadRequest(ModelState);    
                 
                 var appUser = new AppUser
                 {

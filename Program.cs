@@ -10,7 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-var siginKey = new SigninKey();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -50,9 +49,9 @@ builder.Services.AddDbContext<AplicationDBContext>(options => {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserPortifolioRepository, UserPortifolioReposiroty>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options => {
     options.Password.RequireDigit = true;
@@ -64,7 +63,9 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options => {
 .AddEntityFrameworkStores<AplicationDBContext>();
 
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
+builder.Services.AddAuthentication(options => {
+    options.DefaultAuthenticateScheme =JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(options => {
     options.TokenValidationParameters = new TokenValidationParameters{
         ValidateIssuer = true,
         ValidIssuer = builder.Configuration["JWT:Issuer"],
@@ -72,7 +73,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidAudience = builder.Configuration["JWT:Audience"],
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(siginKey.Key)
+            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
         )
     };
     

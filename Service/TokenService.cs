@@ -11,15 +11,14 @@ namespace api.Service
     {
         private readonly IConfiguration _config;
         private readonly SymmetricSecurityKey _key;
-        private readonly SigninKey siginKey = new SigninKey(); 
         
         public TokenService(IConfiguration config)
         {
             _config = config;
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(siginKey.Key));
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:SigningKey"]));
         }
         public string CreateToken(AppUser user)
-        {            
+        {
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),

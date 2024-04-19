@@ -8,7 +8,6 @@ namespace api.DTOs.Account
 {
     public class UserPortifolioDto
     {
-        public string? UserName { get; set; }
         [Required]
         public string Email { get; set; }
     }

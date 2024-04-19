@@ -9,13 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Data
 {
-    public class AplicationDBContext : IdentityDbContext<AppUser>
+    public class AplicationDBContext(DbContextOptions dbContextOptions) : IdentityDbContext<AppUser>(dbContextOptions)
     {
-        public AplicationDBContext(DbContextOptions dbContextOptions)
-        : base(dbContextOptions)
-        {
-        }
-
         public DbSet<Stock> Stock { get; set; }
         public DbSet<StockPortifolio> StockPortifolios { get; set; }
 

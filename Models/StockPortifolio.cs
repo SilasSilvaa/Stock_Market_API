@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace api.Models
 {
 
+    [Table("StockPortifolios")]
     public class StockPortifolio
     {
         public string AppUserId { get; set; }

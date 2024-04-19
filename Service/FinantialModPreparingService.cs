@@ -20,12 +20,10 @@ namespace api.Service
         {
          try{
             var result = await _httpClient.GetAsync($"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={_configuration["APIKey"]}");
-                var content = await result.Content.ReadAsStringAsync();
         
-            Console.WriteLine("Resultado ----> " + JsonConvert.DeserializeObject<FMPStock[]>(content));
             if(result.IsSuccessStatusCode)
             {
-                // var content = await result.Content.ReadAsStringAsync();
+                var content = await result.Content.ReadAsStringAsync();
                 var contentDeserialize = JsonConvert.DeserializeObject<FMPStock[]>(content);
                 var stock = contentDeserialize[0];
 

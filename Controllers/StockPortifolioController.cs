@@ -54,11 +54,6 @@ namespace api.Controllers
                     await _repository.CreateAsync(stock);
                 }
             }
-
-            if(stock == null) 
-            {
-                return BadRequest("Stock not found");
-            }
             
             var userPortifolio = await _portifolioRepositoy.GetUserPortifolio(appUser);
             if(userPortifolio.Any(s => s.Symbol.Equals(symbol, StringComparison.CurrentCultureIgnoreCase))) 

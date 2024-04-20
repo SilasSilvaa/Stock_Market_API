@@ -47,6 +47,22 @@ namespace api.Mappers
             Purchase = (decimal) fMPStock.price,
         };
      }
+    public static List<StockList> ToSimpleStockList(this List<StockList> stocks)
+     {
+        var stockDtoList = new List<StockList>();
 
+        foreach(StockList stock in stocks)
+        {
+            stockDtoList.Add(new StockList {
+                Symbol = stock.Symbol, 
+                Name = stock.Name,
+                Currency = stock.Currency,
+                StockExchange = stock.StockExchange,
+                ExchangeShortName = stock.ExchangeShortName
+            });
+        }
+        return stockDtoList;
+        
+     }
     }
 }

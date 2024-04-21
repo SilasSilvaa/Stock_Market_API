@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.DTOs;
+using api.DTOs.Account;
 using api.DTOs.Stock;
 using api.Models;
 
@@ -15,54 +16,67 @@ namespace api.Mappers
         return new StockDto
         {
             Id = stockModel.Id,
+            Image = stockModel.Image ?? "",
             Symbol = stockModel.Symbol,
-            CompanyName = stockModel.CompanyName,
-            Industry = stockModel.Industry,
-            LastDiv = stockModel.LastDiv,
-            MarketCap = stockModel.MarketCap,
-            Purchase = stockModel.Purchase,
+            Name = stockModel.Name,
+            Price = stockModel.Price ?? 0,
+            ExchangeShortName = stockModel.ExchangeShortName ?? "",
+            StockExchange = stockModel.StockExchange ?? "",
         };
      }
-     public static Stock ToStockFromCreateDTO(this CreateStockRequestDto stockDto)
+     public static Stock FromFMPToStock(this FMPStock stockModel)
      {
         return new Stock
         {
-            Symbol = stockDto.Symbol,
-            CompanyName = stockDto.CompanyName,
-            Industry = stockDto.Industry,
-            LastDiv = stockDto.LastDiv,
-            MarketCap = stockDto.MarketCap,
-            Purchase = stockDto.Purchase,
+            Image = stockModel.image,
+            Symbol = stockModel.symbol,
+            Name = stockModel.companyName,
+            Price = (decimal?)stockModel.price ?? 0,
+            ExchangeShortName = stockModel.exchangeShortName,
+            StockExchange = stockModel.exchange,
         };
      }
-    public static Stock ToStockFromFMP(this FMPStock fMPStock)
+     public static Stock CreateRequestNewStock(this CreateStockRequestDto stockModel)
      {
         return new Stock
         {
-            Symbol = fMPStock.symbol,
-            CompanyName = fMPStock.companyName,
-            Industry = fMPStock.industry,
-            LastDiv =  (decimal)fMPStock.lastDiv,
-            MarketCap = fMPStock.mktCap,
-            Purchase = (decimal) fMPStock.price,
+            Image = stockModel.Image,
+            Symbol = stockModel.Symbol,
+            Name = stockModel.Name,
+            Price = (decimal)stockModel.Price,
+            ExchangeShortName = stockModel.ExchangeShortName,
+            StockExchange = stockModel.StockExchange,
+            UserId = stockModel.UserId,
         };
      }
-    public static List<StockList> ToSimpleStockList(this List<StockList> stocks)
+     public static StockDto ToPortfolioDTO(this Stock stockModel)
      {
-        var stockDtoList = new List<StockList>();
+        return new StockDto
+        {
+            Id = stockModel.Id,
+            Image = stockModel.Image ?? "",
+            Symbol = stockModel.Symbol,
+            Name = stockModel.Name,
+            Price = stockModel.Price ?? 0,
+            ExchangeShortName = stockModel.ExchangeShortName ?? "",
+            StockExchange = stockModel.StockExchange ?? "",
+        };
+     }
 
-        foreach(StockList stock in stocks)
+     public static StockDetail FromFMPToStockDetail(this FMPStock stock)
+     {
+        return new StockDetail 
         {
-            stockDtoList.Add(new StockList {
-                Symbol = stock.Symbol, 
-                Name = stock.Name,
-                Currency = stock.Currency,
-                StockExchange = stock.StockExchange,
-                ExchangeShortName = stock.ExchangeShortName
-            });
-        }
-        return stockDtoList;
-        
-     }
+            Image = stock.image,
+            Ceo = stock.ceo,
+            Changes = (decimal)stock.changes,
+            CompanyName = stock.companyName,
+            Description = stock.description,
+            Industry = stock.industry,
+            MarketCap = stock.mktCap,
+            Price = (decimal?)stock.price ?? 0,
+            Symbol = stock.symbol,
+        };
+     } 
     }
 }

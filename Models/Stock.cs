@@ -10,15 +10,15 @@ namespace api.Models
     public class Stock
     {
         public int Id { get; set; }
+        public string? UserId { get; set; }
         public string Symbol { get; set; } = string.Empty;
-        public string CompanyName { get; set;} = string.Empty;
+        public string? Image { get; set; } = string.Empty;
+        public string Name { get; set;} = string.Empty;
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Purchase { get; set; }
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal LastDiv { get; set; }
-        public string Industry { get; set; } = string.Empty;
-        public long MarketCap { get; set; }
-        public List<StockPortifolio> StockPortifolios { get; set; } = new List<StockPortifolio>();
+        public decimal? Price { get; set; }
+        public string? StockExchange { get; set; } = string.Empty;
+        public string? ExchangeShortName { get; set; } = string.Empty;        
+        public List<StockPortifolio> Portifolio { get; set; } = new List<StockPortifolio>();
 
     }
 }

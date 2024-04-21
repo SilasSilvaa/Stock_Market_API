@@ -51,7 +51,7 @@ builder.Services.AddDbContext<AplicationDBContext>(options => {
 
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IUserPortifolioRepository, UserPortifolioReposiroty>();
+builder.Services.AddScoped<IUserPortfolioRepository, UserPortfolioRepository>();
 builder.Services.AddScoped<IFinantialModPreparingService, FinantialModPreparingService>();
 builder.Services.AddHttpClient<IFinantialModPreparingService, FinantialModPreparingService>();
 
@@ -63,7 +63,6 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options => {
     options.Password.RequiredLength = 12;
 })
 .AddEntityFrameworkStores<AplicationDBContext>();
-
 
 builder.Services.AddAuthentication(options => {
     options.DefaultAuthenticateScheme =JwtBearerDefaults.AuthenticationScheme;
@@ -78,7 +77,6 @@ builder.Services.AddAuthentication(options => {
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
         )
     };
-    
 });
 
 var app = builder.Build();

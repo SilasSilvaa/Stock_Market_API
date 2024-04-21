@@ -1,54 +1,48 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using api.Data;
-using api.DTOs.Stock;
 using api.Helpers;
 using api.Interfaces;
 using api.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
 {
-    public class StockRepository(AplicationDBContext context) : IStockRepository
+    public class StockRepository(AplicationDBContext context, IFinantialModPreparingService service, UserManager<AppUser> manager) : IStockRepository
     {
         private readonly AplicationDBContext _context = context;
+        private readonly  UserManager<AppUser> _manager = manager;
+        private readonly IFinantialModPreparingService _service = service;
 
         public async Task<List<Stock>> GetAllAsync(QueryObject query)
         {
-            var stocks = _context.Stock.AsQueryable();
-
-            if(!string.IsNullOrWhiteSpace(query.CompanyName))
+            try
             {
-                stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName));
+                var stocks = _context.Stock.AsQueryable();
+                var user = await _manager.FindByEmailAsync(query.Email) ?? throw new HttpRequestException("Error when searching for a user by email");
+                await _service.GetDataUpdated(stocks);
+
+                stocks = stocks.Where(x => x.UserId == user.Id);
+
+                if(query.OrderByName) stocks = stocks.OrderBy(s => s.Name);
+                if(query.OrderByPrice) stocks = stocks.OrderBy(s => s.Price);
+                if(query.OrderByExchangeShortName) stocks = stocks.OrderBy(s => s.ExchangeShortName);
+                if(query.OrderByStockExchange) stocks = stocks.OrderBy(s => s.StockExchange);
+                if(query.OrderBySymbol) stocks = stocks.OrderBy(s => s.Symbol);
+                
+                var skipNumber = (query.PageNumber -1 ) * query.PageSize;
+                return await stocks.Skip(skipNumber).Take(query.PageSize).ToListAsync();
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
-            if(!string.IsNullOrWhiteSpace(query.Symbol))
-            {
-                stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol));
-            }
-
-            if(!string.IsNullOrWhiteSpace(query.Industry))
-            {
-                stocks = stocks.Where(s => s.Industry.Contains(query.Industry));
-            }
-
-            if(query.OrderByName)
-            {
-                stocks = stocks.OrderBy(s => s.CompanyName);
-            }
-
-            var skipNumber = (query.PageNumber -1 ) * query.PageSize;
-
-            return await stocks.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
 
         public async Task<Stock> GetByIdAsync(int id)
         {
-            var stock = await _context.Stock.FindAsync(id) ?? throw new Exception("Stock Not Found");
-            return stock;
+            return await _context.Stock.FindAsync(id) ?? throw new Exception("Stock Not Found");
         }
 
         public async Task<Stock> CreateAsync(Stock stock)
@@ -58,9 +52,9 @@ namespace api.Repository
             return stock;
         }
 
-        public async Task<Stock?> DeleteAsync(int id)
+        public async Task<Stock?> DeleteAsync(string userId, int id)
         {
-            var stock = await _context.Stock.FirstOrDefaultAsync(x => x.Id == id );
+            var stock = await _context.Stock.FirstOrDefaultAsync(x => x.UserId == userId && x.Id == id );
             
             if(stock == null)
             {
@@ -72,30 +66,23 @@ namespace api.Repository
             return stock;
         }
 
-        public async Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto updateStock)
+        public async Task<Stock?> GetBySymbol(string symbol)
         {
-            var stock = await _context.Stock.FirstOrDefaultAsync(x => x.Id == id);
-
-            if(stock == null)
+            if(symbol == null)
             {
                 return null;
             }
-
-            stock.Symbol = updateStock.Symbol;
-            stock.CompanyName = updateStock.CompanyName;
-            stock.Industry = updateStock.Industry;
-            stock.LastDiv = updateStock.LastDiv;
-            stock.Purchase = updateStock.Purchase;
-            stock.MarketCap = updateStock.MarketCap;
-
-            await _context.SaveChangesAsync();
-
-            return stock;
+            return await _context.Stock.FirstOrDefaultAsync(s => s.Symbol == symbol);
         }
 
-        public async Task<Stock?> GetBySymbolAsync(string symbol)
+        public async Task<Stock?> GetStockDetailById(string userId, int id)
         {
-            return await _context.Stock.FirstOrDefaultAsync(s => s.Symbol == symbol);
+            var result = await _context.Stock.Where(x => x.UserId == userId && x.Id == id)
+            .FirstOrDefaultAsync();
+            
+            if(result != null) return result;
+
+            return null;
         }
     }
 }

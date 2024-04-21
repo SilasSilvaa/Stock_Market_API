@@ -9,29 +9,11 @@ namespace api.DTOs
     public class StockDto
     {
         public int Id { get; set; }
-
-        [Required]
-        [MaxLength(10, ErrorMessage = "The symbol cannot be longer than 10 characters")]
         public string Symbol { get; set; } = string.Empty;
-
-        [Required]
-        [MaxLength(15, ErrorMessage = "The Company Name cannot be longer than 15 characters")]
-        public string CompanyName { get; set;} = string.Empty;
-
-        [Required]
-        [Range(1, 1000000000)]
-        public decimal Purchase { get; set; }
-
-        [Required]
-        [Range(0.001, 100)]
-        public decimal LastDiv { get; set; }
-
-        [Required]
-        [MaxLength(15, ErrorMessage = "The Industry cannot be longer than 15 characters")]
-        public string Industry { get; set; } = string.Empty;
-
-        [Required]
-        [Range(1, 5000000000)]
-        public long MarketCap { get; set; }
+        public string Image {get; set; } = string.Empty;
+        public string Name { get; set;} = string.Empty;
+        public decimal Price { get; set; }
+        public string StockExchange { get; set; } = string.Empty;
+        public string ExchangeShortName { get; set; } = string.Empty;
     }
 }

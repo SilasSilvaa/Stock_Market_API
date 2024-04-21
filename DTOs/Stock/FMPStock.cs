@@ -8,8 +8,8 @@ namespace api.DTOs
     public class FMPStock
     {
         public string symbol { get; set; } = string.Empty;
-        public double price { get; set; }
-        public double beta { get; set; }
+        public double? price { get; set; }
+        public double? beta { get; set; }
         public int volAvg { get; set; }
         public long mktCap { get; set; }
         public double lastDiv { get; set; }
@@ -34,8 +34,8 @@ namespace api.DTOs
         public string city { get; set; } = string.Empty;
         public string state { get; set; } = string.Empty;
         public string zip { get; set; } = string.Empty;
-        public double dcfDiff { get; set; }
-        public double dcf { get; set; }
+        public double? dcfDiff { get; set; }
+        public double? dcf { get; set; }
         public string image { get; set; } = string.Empty;
         public string ipoDate { get; set; } = string.Empty;
         public bool defaultImage { get; set; }

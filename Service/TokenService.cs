@@ -19,6 +19,9 @@ namespace api.Service
         }
         public string CreateToken(AppUser user)
         {
+            if(user.Email == null) throw new HttpRequestException("Error creating token, email cannot be null");
+            if(user.UserName == null) throw new HttpRequestException("Error creating token, user cannot be null");
+            
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.DTOs.Account;
 using api.Interfaces;
 using api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,8 +34,9 @@ namespace api.Controllers
                     Email = register.Email,
                 };
 
+                if(register.Password == null) return BadRequest("Error password cannot be null.");
                 var createdUser = await _userManager.CreateAsync(appUser, register.Password);
-
+             
                 if(createdUser.Succeeded)
                 {
                     var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
@@ -64,6 +66,7 @@ namespace api.Controllers
             }
         }
 
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto login)
         {
@@ -72,10 +75,12 @@ namespace api.Controllers
                 return BadRequest(ModelState);
             }
 
+            if(login.Email == null) return BadRequest("Error email cannot be null.");
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == login.Email.ToLower());
 
             if(user == null) return Unauthorized("Invalid E-mail");
 
+            if(login.Password == null) return BadRequest("Error password cannot be null.");
             var result = await _signInManager.CheckPasswordSignInAsync(user, login.Password, false);
 
             if(!result.Succeeded) return Unauthorized("E-mail not found or your password is wrong");
@@ -88,6 +93,20 @@ namespace api.Controllers
                     Token = _token.CreateToken(user)
                 }
             );
+
+        }
+    
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+            await _signInManager.SignOutAsync();
+            return Ok("User logged out successfully.");
+            }catch (Exception)
+            {
+                throw;
+            }
 
         }
     }

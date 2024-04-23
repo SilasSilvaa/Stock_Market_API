@@ -11,72 +11,88 @@ namespace api.Mappers
 {
     public static class StockMappers
     {
-     public static StockDto ToStockDTO(this Stock stockModel)
-     {
-        return new StockDto
+    
+    public static StockDB CreateStockDTO(this CreateStockRequestDto stockModel)
+    {
+        return new StockDB 
+        {
+            Symbol = stockModel.Symbol,
+            Image =  stockModel.Image,
+            CompanyName =  stockModel.CompanyName,
+            Price =  stockModel.Price,
+            Changes =  stockModel.Changes,
+            LastDiv =  stockModel.LastDiv,
+            MarketCap =  stockModel.MarketCap,
+            Currency = stockModel.Currency,
+            Description = stockModel.Description,
+            Industry = stockModel.Industry
+        };
+    }
+    public static StockDto ToStockDTO(this StockDB stockModel)
+    {
+        return new StockDto 
         {
             Id = stockModel.Id,
-            Image = stockModel.Image ?? "",
             Symbol = stockModel.Symbol,
-            Name = stockModel.Name,
-            Price = stockModel.Price ?? 0,
-            ExchangeShortName = stockModel.ExchangeShortName ?? "",
-            StockExchange = stockModel.StockExchange ?? "",
+            Image =  stockModel.Image,
+            CompanyName =  stockModel.CompanyName,
+            Price =  stockModel.Price,
+            Changes =  stockModel.Changes,
+            LastDiv =  stockModel.LastDiv,
+            MarketCap =  stockModel.MarketCap,
+            Currency = stockModel.Currency,
+            Description = stockModel.Description,
+            Industry = stockModel.Industry
         };
-     }
-     public static Stock FromFMPToStock(this FMPStock stockModel)
-     {
-        return new Stock
+    }
+    public static StockDto UpdateStockRequestDTO(this StockDB stockModel)
+    {
+        return new StockDto 
         {
-            Image = stockModel.image,
+            Id = stockModel.Id,
+            Symbol = stockModel.Symbol,
+            Image =  stockModel.Image,
+            CompanyName =  stockModel.CompanyName,
+            Price =  stockModel.Price,
+            Changes =  stockModel.Changes,
+            LastDiv =  stockModel.LastDiv,
+            MarketCap =  stockModel.MarketCap,
+            Currency = stockModel.Currency,
+            Description = stockModel.Description,
+            Industry = stockModel.Industry
+        };
+    }
+    public static GetStockDto FromFMPToGetStock(this FMPStockDto stockModel)
+    {
+        return new GetStockDto
+        {
             Symbol = stockModel.symbol,
-            Name = stockModel.companyName,
-            Price = (decimal?)stockModel.price ?? 0,
-            ExchangeShortName = stockModel.exchangeShortName,
-            StockExchange = stockModel.exchange,
+            Image =  stockModel.image,
+            CompanyName =  stockModel.companyName,
+            Price =  (decimal?)stockModel.price ?? 0,
+            Changes =  (decimal?)stockModel.changes ?? 0,
+            LastDiv =  (decimal?)stockModel.lastDiv ?? 0,
+            MarketCap =  stockModel.mktCap,
+            Currency = stockModel.currency,
+            Description = stockModel.description,
+            Industry = stockModel.industry
         };
-     }
-     public static Stock CreateRequestNewStock(this CreateStockRequestDto stockModel)
-     {
-        return new Stock
+    }
+    public static StockDB FromGetStockToStockDB(this GetStockDto stockModel)
+    {
+        return new StockDB
         {
-            Image = stockModel.Image,
             Symbol = stockModel.Symbol,
-            Name = stockModel.Name,
-            Price = (decimal)stockModel.Price,
-            ExchangeShortName = stockModel.ExchangeShortName,
-            StockExchange = stockModel.StockExchange,
-            UserId = stockModel.UserId,
+            Image =  stockModel.Image,
+            CompanyName =  stockModel.CompanyName,
+            Price =  (decimal?)stockModel.Price ?? 0,
+            Changes =  (decimal?)stockModel.Changes ?? 0,
+            LastDiv =  (decimal?)stockModel.LastDiv ?? 0,
+            MarketCap =  stockModel.MarketCap,
+            Currency = stockModel.Currency,
+            Description = stockModel.Description,
+            Industry = stockModel.Industry
         };
-     }
-     public static StockDto ToPortfolioDTO(this Stock stockModel)
-     {
-        return new StockDto
-        {
-            Id = stockModel.Id,
-            Image = stockModel.Image ?? "",
-            Symbol = stockModel.Symbol,
-            Name = stockModel.Name,
-            Price = stockModel.Price ?? 0,
-            ExchangeShortName = stockModel.ExchangeShortName ?? "",
-            StockExchange = stockModel.StockExchange ?? "",
-        };
-     }
-
-     public static StockDetail FromFMPToStockDetail(this FMPStock stock)
-     {
-        return new StockDetail 
-        {
-            Image = stock.image,
-            Ceo = stock.ceo,
-            Changes = (decimal)stock.changes,
-            CompanyName = stock.companyName,
-            Description = stock.description,
-            Industry = stock.industry,
-            MarketCap = stock.mktCap,
-            Price = (decimal?)stock.price ?? 0,
-            Symbol = stock.symbol,
-        };
-     } 
+    }
     }
 }

@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using api.DTOs.Account;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
+using api.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,24 +13,24 @@ namespace api.Controllers
     [ApiController]
     public class StockPortifolioController(
         UserManager<AppUser> userManager, 
-        IStockRepository repository, 
+        IStockDBRepository repository, 
         IUserPortfolioRepository portfolioRepo,
         IFinantialModPreparingService service
         ) : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager = userManager;
-        private readonly IStockRepository _repository = repository;
+        private readonly IStockDBRepository _repository = repository;
         private readonly IUserPortfolioRepository _portfolioRepo = portfolioRepo;
         private readonly IFinantialModPreparingService _service = service;
     
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetUserPortifolio([FromQuery] QueryObject query)
+        public async Task<IActionResult> GetUserPortifolio([FromQuery] QueryObject query, string email)
         {
-            var appUser = await _userManager.FindByEmailAsync(query.Email);
+            var appUser = await _userManager.FindByEmailAsync(email);
             if(appUser != null)
             {
-                var userPortifolio = await _portfolioRepo.GetUserPortfolioQueryableAsync(query);
+                var userPortifolio = await _portfolioRepo.GetUserPortfolioAsync(appUser);
                 return Ok(userPortifolio);
             }
             
@@ -44,51 +39,54 @@ namespace api.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddUserPortifolio([FromQuery] [Required]string email, [Required]string symbol)
+        public async Task<IActionResult> AddPortfolio([FromBody] AddPortfolio portfolio)
         {
-            var appUser = await _userManager.FindByEmailAsync(email);
-            var stock = await _repository.GetBySymbol(symbol);
+            
+            var appUser = await _userManager.FindByEmailAsync(portfolio.Email);
+            if(appUser == null) return BadRequest("User not found.");
 
+            var stock = await _repository.GetBySymbolAsync(portfolio.Symbol);
+            
             if (stock == null)
-            {
-                stock = await _service.FindByStockBySymbolAsync(symbol);
-                if (stock == null)
+            {   
+                var findStock = await _service.FindStockBySymbolAsync(portfolio.Symbol);
+                if(findStock == null ) 
                 {
                     return BadRequest("Stock does not exists");
                 }
-                else
-                {
-                    await _repository.CreateAsync(stock);
-                }
-            }
-            if(appUser == null) return BadRequest("Error when searching for a user by email");
-            var userPortifolio = await _portfolioRepo.GetUserPortfolioAsync(appUser);
 
-            if(userPortifolio.Any(s => s.Symbol.Equals(symbol, StringComparison.CurrentCultureIgnoreCase))) 
-            {
-                return BadRequest("Cannot add same stock to portifolio");
+                stock = findStock.FromGetStockToStockDB();
+                await _repository.CreateAsync(stock);
             }
+            
 
-            var stockPortifolio = new StockPortifolio
+            if (stock == null) return BadRequest("Stock not found");
+
+            var userPortfolio = await _portfolioRepo.GetUserPortfolioAsync(appUser);
+
+            if (userPortfolio.Any(e => e.Symbol.ToLower() == portfolio.Symbol.ToLower())) return BadRequest("Cannot add same stock to portfolio");
+
+            var portfolioModel = new StockPortifolio
             {
                 StockId = stock.Id,
                 AppUserId = appUser.Id
-            };  
+            };
 
-            await _portfolioRepo.CreateAsync(stockPortifolio);
+            await _portfolioRepo.CreateAsync(portfolioModel);
 
-            if(stockPortifolio == null)
+            if (portfolioModel == null)
             {
-                return StatusCode(500, "Error to create");
-            } else 
+                return StatusCode(500, "Could not create");
+            }
+            else
             {
                 return Created();
             }
-
         }
-        [HttpGet("id")]
+       
+        [HttpGet("{id:int}")]
         [Authorize]
-        public async Task<IActionResult> GetStockByIdAsync([FromQuery] [Required]int id, [Required] string email)
+        public async Task<IActionResult> GetStockByIdAsync([FromRoute] int id, string email)
         {
             if(!ModelState.IsValid)
             {
@@ -100,12 +98,10 @@ namespace api.Controllers
                 var user = await _userManager.FindByEmailAsync(email);
                 if(user == null) return BadRequest("Erro to find user");
 
-                var stockDb = await _portfolioRepo.GetStockDetailById(user.Id, id);
-                if(stockDb == null) return BadRequest("Erro to find stock");
+                var stock = await _portfolioRepo.GetStockById(user.Id, id);
+                if(stock == null) return BadRequest("Erro to find stock");
                 
-                var stockDetail = await _service.GetStockDetailById(stockDb.Symbol);
-
-                return Ok(stockDetail);
+                return Ok(stock);
             }
             catch (Exception)
             {
@@ -115,9 +111,9 @@ namespace api.Controllers
  
         [HttpDelete]
         [Authorize]
-        public async Task<IActionResult> DeleteStockPortifolio([FromQuery] [Required]string email, int id)
+        public async Task<IActionResult> DeleteStockPortifolio([FromBody] DeletePortfolio portfolio)
         {
-            var appUser = await _userManager.FindByEmailAsync(email);
+            var appUser = await _userManager.FindByEmailAsync(portfolio.Email);
             
             if(appUser == null) return BadRequest("Error when searching for a user by email");
             var userPortifolio = await _portfolioRepo.GetUserPortfolioAsync(appUser);
@@ -127,7 +123,7 @@ namespace api.Controllers
                 return BadRequest("User portifolio not found");
             }   
 
-            var stock =  userPortifolio.Where(s => s.Id == id).ToList();
+            var stock =  userPortifolio.Where(s => s.Id == portfolio.Id).ToList();
             var currentStock = stock[0];
 
             if(stock.Count == 1)
@@ -141,5 +137,6 @@ namespace api.Controllers
 
             return Ok();
         }
+    
     }
 }

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -11,7 +7,7 @@ namespace api.Data
 {
     public class AplicationDBContext(DbContextOptions dbContextOptions) : IdentityDbContext<AppUser>(dbContextOptions)
     {
-        public DbSet<Stock> Stock { get; set; }
+        public DbSet<StockDB> Stock { get; set; }
         public DbSet<StockPortifolio> StockPortifolios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

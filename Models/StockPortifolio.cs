@@ -12,7 +12,7 @@ namespace api.Models
     {
         public string? AppUserId { get; set; }
         public int StockId { get; set; }
-        public Stock? Stock { get; set; }
+        public StockDB? Stock { get; set; }
         public AppUser? AppUser { get; set; }
     }
 }

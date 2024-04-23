@@ -49,7 +49,7 @@ builder.Services.AddDbContext<AplicationDBContext>(options => {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddScoped<IStockRepository, StockRepository>();
+builder.Services.AddScoped<IStockDBRepository, StockDBRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserPortfolioRepository, UserPortfolioRepository>();
 builder.Services.AddScoped<IFinantialModPreparingService, FinantialModPreparingService>();

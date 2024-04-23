@@ -8,28 +8,26 @@ using Newtonsoft.Json;
 
 namespace api.Service
 {
-    public class FinantialModPreparingService(HttpClient httpClient, IConfiguration configuration, AplicationDBContext context) : IFinantialModPreparingService
+    public class FinantialModPreparingService(HttpClient httpClient, IConfiguration configuration) : IFinantialModPreparingService
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly IConfiguration _configuration = configuration;
-        private readonly AplicationDBContext _context = context;
-
-        public async Task<Stock> FindByStockBySymbolAsync(string symbol)
+        public async Task<GetStockDto?> FindStockBySymbolAsync(string symbol)
         {
             var result = await _httpClient.GetAsync($"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={_configuration["APIKey"]}");
 
             if(result.IsSuccessStatusCode)
             {
                 var content = await result.Content.ReadAsStringAsync();
-                var task = JsonConvert.DeserializeObject<FMPStock[]>(content);
+                var task = JsonConvert.DeserializeObject<FMPStockDto[]>(content);
                 
                 if(task != null && task.Length > 0)
                 {
                     var stock = task[0];
-                    return stock.FromFMPToStock();
+                    return stock.FromFMPToGetStock();
                 }
                 
-                throw new JsonException("Error to deserialize json object");
+                throw new Exception("Error when searching for an stock");
             }
             else
             {
@@ -37,59 +35,5 @@ namespace api.Service
             } 
         }
 
-        public async Task<IQueryable<Stock>> GetDataUpdated(IQueryable<Stock> stocksDb)
-        {
-            try{
-                foreach(Stock stockDb in stocksDb)
-                {
-                    var result = await _httpClient.GetAsync($"https://financialmodelingprep.com/api/v3/profile/{stockDb.Symbol}?apikey={_configuration["APIKey"]}");
-                    
-                    if(result.IsSuccessStatusCode)
-                    {
-                        var content = await result.Content.ReadAsStringAsync();
-                        var tasks = JsonConvert.DeserializeObject<FMPStock[]>(content) ?? throw new Exception("Error");
-                        var currentStock = tasks[0];
-                        var existingStock = stockDb.Symbol == currentStock.symbol;
-                        
-                        if(!existingStock)
-                        {
-                            stockDb.Name = currentStock.companyName;
-                            stockDb.Price = (decimal?)currentStock.price ?? 0;
-                            stockDb.StockExchange = currentStock.exchange;
-                            stockDb.ExchangeShortName = currentStock.exchangeShortName;
-                        }
-                    }
-                }
-                
-                await _context.SaveChangesAsync();                
-                return stocksDb;              
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<StockDetail?> GetStockDetailById(string symbol)
-        {
-            var result = await _httpClient.GetAsync($"https://financialmodelingprep.com/api/v3/profile/{symbol}?apikey={_configuration["APIKey"]}");
-            StockDetail stock = new StockDetail();
-            
-            if(result.IsSuccessStatusCode)
-            {
-                var content = await result.Content.ReadAsStringAsync();
-                var tasks = JsonConvert.DeserializeObject<FMPStock[]>(content);
-                
-                if(tasks != null && tasks.Length > 0)
-                {
-                    var currentStock = tasks[0];
-                    
-                    return currentStock.FromFMPToStockDetail();
-                }
-                    return null;
-            }                
-                throw new JsonException("Error to deserialize json object");
-        }   
     }
 }

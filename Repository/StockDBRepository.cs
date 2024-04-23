@@ -3,19 +3,13 @@ using api.DTOs.Stock;
 using api.Helpers;
 using api.Interfaces;
 using api.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
 {
-    public class StockDBRepository(AplicationDBContext context, UserManager<AppUser> manager) : IStockDBRepository
+    public class StockDBRepository( AplicationDBContext context ) : IStockDBRepository
     {
         private readonly AplicationDBContext _context = context;
-        private readonly  UserManager<AppUser> _manager = manager;
-
-        // private readonly IFinantialModPreparingService _service = service;
 
         public async Task<List<StockDB>> GetAllAsync(QueryObject query)
         {

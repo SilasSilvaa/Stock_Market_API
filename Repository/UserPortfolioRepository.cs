@@ -36,8 +36,35 @@ namespace api.Repository
                 MarketCap = s.Stock.MarketCap,
             }).ToListAsync();
 
-            return userPortifolio;
+            return  userPortifolio;
         }
+
+        public async Task<List<StockDB>> GetUserPortfolioWtihQueryAsync(AppUser user, QueryObject query)
+        {
+            var userPortifolio = _context.StockPortifolios.Where(x => x.AppUserId == user.Id)
+            .Select(s => new StockDB 
+            {
+                Id = s.Stock.Id,
+                Image = s.Stock.Image,
+                Symbol = s.Stock.Symbol,
+                CompanyName = s.Stock.CompanyName,
+                Price = s.Stock.Price,
+                Changes = s.Stock.Changes,
+                Currency = s.Stock.Currency,
+                Description = s.Stock.Description,
+                Industry = s.Stock.Industry,
+                LastDiv = s.Stock.LastDiv,
+                MarketCap = s.Stock.MarketCap,
+            }).AsQueryable();
+
+                if(query.OrderByName) userPortifolio = userPortifolio.OrderBy(s => s.CompanyName);
+                if(query.OrderByPrice) userPortifolio = userPortifolio.OrderBy(s => s.Price);
+                if(query.OrderBySymbol) userPortifolio = userPortifolio.OrderBy(s => s.Symbol);
+
+            var skipNumber = (query.PageNumber -1 ) * query.PageSize;
+            return await userPortifolio.Skip(skipNumber).Take(query.PageSize).ToListAsync();;
+        }
+
 
         public async Task<StockPortifolio> CreateAsync(StockPortifolio stockPortifolio)
         {

@@ -53,15 +53,15 @@ namespace api.Repository
             }
             
             existingStock.Symbol = updateStock.Symbol;
+            existingStock.Image = updateStock.Image;
             existingStock.CompanyName = updateStock.CompanyName;
             existingStock.Price = updateStock.Price;
-            existingStock.LastDiv = updateStock.LastDiv;
-            existingStock.Industry = updateStock.Industry;
-            existingStock.MarketCap = updateStock.MarketCap;
             existingStock.Changes = updateStock.Changes;
+            existingStock.LastDiv = updateStock.LastDiv;
+            existingStock.MarketCap = updateStock.MarketCap;
             existingStock.Currency = updateStock.Currency;
             existingStock.Description = updateStock.Description;
-            existingStock.Image = updateStock.Image;
+            existingStock.Industry = updateStock.Industry;
 
             await _context.SaveChangesAsync();
 

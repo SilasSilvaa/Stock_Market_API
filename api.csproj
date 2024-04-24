@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>  
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
@@ -20,12 +22,13 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.4" />
+    <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-    <PackageReference Include="xunit" Version="2.7.1" />
+    <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.analyzers" Version="1.12.0" />
     <PackageReference Include="xunit.assert" Version="2.7.1" />
-    <PackageReference Include="xunit.core" Version="2.7.1" />
+    <PackageReference Include="xunit.core" Version="2.5.3" />
   </ItemGroup>
 
 </Project>

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using api.Data;
 using Microsoft.AspNetCore.Identity;
 using api.DTOs.Stock;
+using api.Service;
 
 namespace api.Controllers
 {
@@ -52,14 +53,14 @@ namespace api.Controllers
             return Ok(stock);
         }
         
-        [HttpGet("{symbol}")]
+        [HttpGet("symbol")]
         [Authorize]
-        public async Task<IActionResult> GetBySymbol([FromRoute] string symbol)
+        public async Task<IActionResult> GetBySymbol([FromQuery] SearchType typeSearch, string symbol)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            StockDB? stock = await _repository.GetBySymbolAsync(symbol);
+            StockDB? stock = await _repository.GetBySymbolAsync("asda");
 
             if (stock == null)
             {
@@ -88,7 +89,9 @@ namespace api.Controllers
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStockRequestDto updateDto)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
 
             var stockModel = await _repository.UpdateAsync(id, updateDto);
 

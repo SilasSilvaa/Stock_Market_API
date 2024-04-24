@@ -1,6 +1,6 @@
-using api.DTOs.Account;
 using api.Interfaces;
 using api.Models;
+using api.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +17,7 @@ namespace api.Controllers
         private readonly SignInManager<AppUser> _signInManager = signInManager;
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto register)
+        public async Task<IActionResult> Register([FromBody] Register register)
         {
             try{
 
@@ -39,7 +39,7 @@ namespace api.Controllers
                     if(roleResult.Succeeded)
                     {
                         return Ok(
-                            new NewUserDto 
+                            new User 
                             {
                                 UserName = register.UserName,
                                 Email = register.Email,
@@ -63,7 +63,7 @@ namespace api.Controllers
 
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto login)
+        public async Task<IActionResult> Login([FromBody] Login login)
         {
             if(!ModelState.IsValid)
             {
@@ -81,7 +81,7 @@ namespace api.Controllers
             if(!result.Succeeded) return Unauthorized("E-mail not found or your password is wrong");
 
             return Ok(
-                new NewUserDto
+                new User
                 {
                     UserName = user.UserName,
                     Email = user.Email,

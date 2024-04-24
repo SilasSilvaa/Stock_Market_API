@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
@@ -25,12 +26,12 @@ namespace api.Controllers
     
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetUserPortifolio([FromQuery] QueryObject query, string email)
+        public async Task<IActionResult> GetUserPortifolio([FromQuery] QueryObject query, [Required]string email)
         {
             var appUser = await _userManager.FindByEmailAsync(email);
             if(appUser != null)
             {
-                var userPortifolio = await _portfolioRepo.GetUserPortfolioAsync(appUser);
+                var userPortifolio = await _portfolioRepo.GetUserPortfolioWtihQueryAsync(appUser, query);
                 return Ok(userPortifolio);
             }
             

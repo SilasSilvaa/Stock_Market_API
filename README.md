@@ -1,6 +1,6 @@
 # Stock Market API
 
-Este projeto é uma API de mercado de ações desenvolvida em .NET 8, utilizando Entity Framework para acesso a banco de dados, Identity JWT para autenticação e autorização de usuários e Swagger para documentação da API e Postgres como banco de dados.
+Este projeto é uma API de mercado de ações desenvolvida em .NET 8, utilizando Entity Framework para acesso a banco de dados, Identity JWT para autenticação e autorização de usuários,Swagger para documentação da API e Postgres como banco de dados.
 
 # Pre requisitos
 - .NET 8 SDK (https://dotnet.microsoft.com/en-us/download)
@@ -126,11 +126,11 @@ Todas as requsições precisam de um token JWT, com exeção da rota Account.
   
   - e-mail: e-mail do usuário - Obrigatório
 
-  - orderBySymbol: ordena por símbolo da ação (ascendente ou descendente).
+  - orderBySymbol: ordena por símbolo da ação.
 
-  - orderByName: ordena por nome da empresa (ascendente ou descendente).
+  - orderByName: ordena por nome da empresa.
 
-  - orderByPrice: ordena por preço (ascendente ou descendente).
+  - orderByPrice: ordena por preço.
 
   - pageSize: define o número de resultados por página (padrão: 20).
 

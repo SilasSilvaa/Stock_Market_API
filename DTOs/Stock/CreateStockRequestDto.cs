@@ -10,19 +10,19 @@ namespace api.DTOs.Stock
         [Required]
         public string Image { get; set; } = string.Empty;
         [Required]
-        [MaxLength(20, ErrorMessage = "Company Name length limited to 20 characters.")]
+        [MaxLength(40, ErrorMessage = "Company Name length limited to 40 characters.")]
         public string CompanyName { get; set;} = string.Empty;
         [Required]
-        [Range(1, 1000000000)]
+        [Range(1, 10000000000)]
         public decimal Price { get; set; }
         [Required]
-        [Range(0.001, 100)]
+        [Range(-100, 100)]
         public decimal Changes { get; set; }
         [Required]
-        [Range(0.001, 100)]
+        [Range(-100, 100)]
         public decimal LastDiv { get; set; }
         [Required]
-        [Range(1, 5000000000)]
+        [Range(1, 50000000000)]
         public long MarketCap { get; set; }
         [Required]
         public string Currency { get; set; } = string.Empty;

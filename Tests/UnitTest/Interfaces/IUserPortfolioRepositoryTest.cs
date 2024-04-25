@@ -21,12 +21,12 @@ namespace Tests.Interfaces
             && method.GetParameters()[0].ParameterType == typeof(AppUser));
             
             Assert.Contains(methods, method => method.Name == "CreateAsync" 
-            && method.ReturnType == typeof(Task<StockPortifolio>) 
+            && method.ReturnType == typeof(Task<StockPortfolio>) 
             && method.GetParameters().Length == 1 
-            && method.GetParameters()[0].ParameterType == typeof(StockPortifolio));
+            && method.GetParameters()[0].ParameterType == typeof(StockPortfolio));
             
             Assert.Contains(methods, method => method.Name == "DeleteAsync" 
-            && method.ReturnType == typeof(Task<StockPortifolio>) 
+            && method.ReturnType == typeof(Task<StockPortfolio>) 
             && method.GetParameters().Length == 2 
             && method.GetParameters()[0].ParameterType == typeof(AppUser) 
             && method.GetParameters()[1].ParameterType == typeof(int));

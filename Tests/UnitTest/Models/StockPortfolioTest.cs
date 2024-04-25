@@ -13,10 +13,10 @@ namespace Tests.Models
         public void HasExpectedProperties()
         {
             // Arrange
-            var portifolio = new StockPortifolio();
+            var portifolio = new StockPortfolio();
 
             // Act
-            var properties = typeof(StockPortifolio).GetProperties();
+            var properties = typeof(StockPortfolio).GetProperties();
 
             // Assert
             Assert.Contains(properties, p => p.Name == "AppUserId" && p.PropertyType == typeof(string));
@@ -31,7 +31,7 @@ namespace Tests.Models
             // Arrange
             var stock = new StockDB { Id = 1 };
             var user = new AppUser { Id = "test_user_id" };
-            var portifolio = new StockPortifolio
+            var portifolio = new StockPortfolio
             {
                 StockId = 1,
                 AppUserId = "test_user_id",

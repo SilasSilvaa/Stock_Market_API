@@ -20,7 +20,7 @@ namespace api.Repository
 
         public async Task<List<StockDB>> GetUserPortfolioAsync(AppUser user)
         {
-            var userPortifolio = await _context.StockPortifolios.Where(x => x.AppUserId == user.Id)
+            var userPortifolio = await _context.StockPortfolios.Where(x => x.AppUserId == user.Id)
             .Select(s => new StockDB 
             {
                 Id = s.Stock.Id,
@@ -41,7 +41,7 @@ namespace api.Repository
 
         public async Task<List<StockDB>> GetUserPortfolioWtihQueryAsync(AppUser user, QueryObject query)
         {
-            var userPortifolio = _context.StockPortifolios.Where(x => x.AppUserId == user.Id)
+            var userPortifolio = _context.StockPortfolios.Where(x => x.AppUserId == user.Id)
             .Select(s => new StockDB 
             {
                 Id = s.Stock.Id,
@@ -66,21 +66,21 @@ namespace api.Repository
         }
 
 
-        public async Task<StockPortifolio> CreateAsync(StockPortifolio stockPortifolio)
+        public async Task<StockPortfolio> CreateAsync(StockPortfolio stockPortfolio)
         {
-            await _context.StockPortifolios.AddAsync(stockPortifolio);
+            await _context.StockPortfolios.AddAsync(stockPortfolio);
             await _context.SaveChangesAsync();
 
-            return stockPortifolio;
+            return stockPortfolio;
         }
 
-        public async Task<StockPortifolio> DeleteAsync(AppUser appUser, int id)
+        public async Task<StockPortfolio> DeleteAsync(AppUser appUser, int id)
         {
-            var userPortifolio = await _context.StockPortifolios.FirstOrDefaultAsync(
+            var userPortifolio = await _context.StockPortfolios.FirstOrDefaultAsync(
             x => x.AppUserId  == appUser.Id && x.StockId == id
             ) ?? throw new Exception("Stock not found Cannot be delete stock");
 
-            _context.StockPortifolios.Remove(userPortifolio);
+            _context.StockPortfolios.Remove(userPortifolio);
             await _context.SaveChangesAsync();
 
             return userPortifolio;
@@ -88,7 +88,7 @@ namespace api.Repository
         
         public async Task<StockDB?> GetStockById( string userId, int id)
         {
-            var result = await _context.StockPortifolios.Where(x => x.AppUserId == userId && x.Stock.Id == id)
+            var result = await _context.StockPortfolios.Where(x => x.AppUserId == userId && x.Stock.Id == id)
             .Select(x => x.Stock)
             .FirstOrDefaultAsync();
 

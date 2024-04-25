@@ -19,7 +19,7 @@ namespace api.Models
         public string Currency { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string Industry { get; set; } = string.Empty;
-        public List<StockPortifolio> Portifolio { get; set; } = new List<StockPortifolio>();
+        public List<StockPortfolio> Portfolio { get; set; } = new List<StockPortfolio>();
 
     }
 }

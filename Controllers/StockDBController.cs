@@ -14,7 +14,6 @@ namespace api.Controllers
     [ApiController]
     public class StockDBController(AplicationDBContext context, IStockDBRepository repository, UserManager<AppUser> manager) : ControllerBase
     {
-        // private readonly IFinantialModPreparingService _service = service;
         private readonly IStockDBRepository _repository = repository;
         private readonly AplicationDBContext _context = context;
         private readonly UserManager<AppUser> _manager = manager;
@@ -52,23 +51,6 @@ namespace api.Controllers
             return Ok(stock);
         }
         
-        [HttpGet("{symbol}")]
-        [Authorize]
-        public async Task<IActionResult> GetBySymbol([FromRoute] string symbol)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            StockDB? stock = await _repository.GetBySymbolAsync(symbol);
-
-            if (stock == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(stock);
-        }
-
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Create([FromBody] CreateStockRequestDto stock)

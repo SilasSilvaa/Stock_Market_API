@@ -8,21 +8,21 @@ namespace api.Data
     public class AplicationDBContext(DbContextOptions dbContextOptions) : IdentityDbContext<AppUser>(dbContextOptions)
     {
         public DbSet<StockDB> Stock { get; set; }
-        public DbSet<StockPortifolio> StockPortifolios { get; set; }
+        public DbSet<StockPortfolio> StockPortfolios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<StockPortifolio>(x => x.HasKey(p => new {p.AppUserId, p.StockId}));
-            builder.Entity<StockPortifolio>()
+            builder.Entity<StockPortfolio>(x => x.HasKey(p => new {p.AppUserId, p.StockId}));
+            builder.Entity<StockPortfolio>()
                 .HasOne(u => u.AppUser)
-                .WithMany(u => u.Portifolio)
+                .WithMany(u => u.Portfolio)
                 .HasForeignKey(u => u.AppUserId);
 
-            builder.Entity<StockPortifolio>()
+            builder.Entity<StockPortfolio>()
                 .HasOne(u => u.Stock)
-                .WithMany(u => u.Portifolio)
+                .WithMany(u => u.Portfolio)
                 .HasForeignKey(u => u.StockId);
                 
             List<IdentityRole> roles = new List<IdentityRole>

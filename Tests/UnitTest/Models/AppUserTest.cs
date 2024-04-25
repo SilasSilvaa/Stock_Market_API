@@ -16,24 +16,24 @@ namespace Tests.Models
     }
 
     [Fact]
-    public void HasPortifolioProperty()
+    public void HasPortfolioProperty()
     {
         // Arrange
         var appUser = new AppUser();
 
         // Assert
-        Assert.NotNull(appUser.Portifolio);
-        Assert.IsType<List<StockPortifolio>>(appUser.Portifolio);
+        Assert.NotNull(appUser.Portfolio);
+        Assert.IsType<List<StockPortfolio>>(appUser.Portfolio);
     }
 
     [Fact]
-    public void PortifolioProperty_DefaultValue_IsEmptyList()
+    public void PortfolioProperty_DefaultValue_IsEmptyList()
     {
         // Arrange
         var appUser = new AppUser();
 
         // Assert
-        Assert.Empty(appUser.Portifolio);
+        Assert.Empty(appUser.Portfolio);
     }
     }
 }

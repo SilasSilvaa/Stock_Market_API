@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    [Route("api/stockportifolio")]
+    [Route("api/stockportfolio")]
     [ApiController]
     public class StockPortifolioController(
         UserManager<AppUser> userManager, 
@@ -67,7 +67,7 @@ namespace api.Controllers
 
             if (userPortfolio.Any(e => e.Symbol.ToLower() == portfolio.Symbol.ToLower())) return BadRequest("Cannot add same stock to portfolio");
 
-            var portfolioModel = new StockPortifolio
+            var portfolioModel = new StockPortfolio
             {
                 StockId = stock.Id,
                 AppUserId = appUser.Id

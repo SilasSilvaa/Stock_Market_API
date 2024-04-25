@@ -6,6 +6,6 @@ namespace api.Models
     [Table("AppUsers")]
     public class AppUser : IdentityUser
     {
-        public List<StockPortifolio> Portifolio { get; set; } = new List<StockPortifolio>();
+        public List<StockPortfolio> Portfolio { get; set; } = new List<StockPortfolio>();
     }
 }

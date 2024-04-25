@@ -4,7 +4,7 @@ namespace api.Models
 {
 
     [Table("StockPortifolios")]
-    public class StockPortifolio
+    public class StockPortfolio
     {
         public string? AppUserId { get; set; }
         public int StockId { get; set; }

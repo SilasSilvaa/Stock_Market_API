@@ -1,6 +1,7 @@
 using api.Interfaces;
 using api.Models;
 using api.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -103,6 +104,20 @@ namespace api.Controllers
                 throw;
             }
 
+        }
+    
+        [HttpPost("getrole")]
+        [Authorize]
+        public async Task<IActionResult> GetRoleByUser([FromBody] UserEmail user)
+        {
+            var appUser = await _userManager.FindByEmailAsync(user.Email);
+            if(appUser == null) 
+            {
+                return BadRequest("User not found");
+            }
+            var role = await _userManager.GetRolesAsync(appUser);
+
+            return Ok(role);
         }
     }
 }

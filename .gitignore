@@ -20,7 +20,6 @@ packages/
 *.log
 
 # Arquivos de chave ou segredo
-appsettings.json
 secrets.json
 
 # Arquivos de compilação do Visual Studio

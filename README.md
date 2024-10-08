@@ -11,7 +11,7 @@ Crie um banco de dados no PostgreSQL.
 
 Edite o arquivo appsettings.json na raiz do projeto para configurar a conexão com o banco de dados PostgreSQL. 
 
-Adicione a chave de acesso para a API do [financialmodelingprep.com](https://site.financialmodelingprep.com/) na chave APIKey.
+Adicione a chave de acesso para a API do [financialmodelingprep.com](https://site.financialmodelingprep.com/) na chave APIKey. (No arquivo appsettings possui uma chave API para teste)
 
 
 
@@ -37,7 +37,7 @@ Inicie o servidor PostgreSQL
 Execute o comando abaixo para inicializar a API
 
 ```csharp
-dotnet run
+dotnet --watch run
 ```
 
 ## Rotas da API

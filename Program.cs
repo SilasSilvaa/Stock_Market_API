@@ -11,8 +11,6 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -45,7 +43,8 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.Services.AddDbContext<AplicationDBContext>(options => {
+builder.Services.AddDbContext<AplicationDBContext>(options =>
+{
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
@@ -55,7 +54,8 @@ builder.Services.AddScoped<IUserPortfolioRepository, UserPortfolioRepository>();
 builder.Services.AddScoped<IFinantialModPreparingService, FinantialModPreparingService>();
 builder.Services.AddHttpClient<IFinantialModPreparingService, FinantialModPreparingService>();
 
-builder.Services.AddIdentity<AppUser, IdentityRole>(options => {
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+{
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
@@ -64,10 +64,13 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options => {
 })
 .AddEntityFrameworkStores<AplicationDBContext>();
 
-builder.Services.AddAuthentication(options => {
-    options.DefaultAuthenticateScheme =JwtBearerDefaults.AuthenticationScheme;
-    }).AddJwtBearer(options => {
-    options.TokenValidationParameters = new TokenValidationParameters{
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
         ValidateIssuer = true,
         ValidIssuer = builder.Configuration["JWT:Issuer"],
         ValidateAudience = true,
@@ -81,12 +84,18 @@ builder.Services.AddAuthentication(options => {
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AplicationDBContext>();
+    dbContext.Database.Migrate();
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Stock API v1");
+    c.RoutePrefix = "swagger";
+});
 
 app.UseHttpsRedirection();
 

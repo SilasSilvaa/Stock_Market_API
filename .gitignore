@@ -27,6 +27,4 @@ secrets.json
 .vs/
 
 # /=Migrations
-/Migrations
-/Migrations/*
 .fake

@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  api:
+    build: .
+    ports:
+      - '5067:8080'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=db;Database=appstock;Port=5432;Username=admin;Password=admin;
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: appstock
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - '5432:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:

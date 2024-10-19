@@ -11,7 +11,7 @@ namespace api.DTOs.Stock
         public string Image { get; set; } = string.Empty;
         [Required]
         [MaxLength(40, ErrorMessage = "Company Name length limited to 40 characters.")]
-        public string CompanyName { get; set;} = string.Empty;
+        public string CompanyName { get; set; } = string.Empty;
         [Required]
         [Range(1, 10000000000)]
         public decimal Price { get; set; }
@@ -22,7 +22,7 @@ namespace api.DTOs.Stock
         [Range(-100, 100)]
         public decimal LastDiv { get; set; }
         [Required]
-        [Range(1, 50000000000)]
+        [Range(1, 9000000000000)]
         public long MarketCap { get; set; }
         [Required]
         public string Currency { get; set; } = string.Empty;
